@@ -21,18 +21,8 @@ It's easy to say we're shooting for MVP, but we need to be careful about managin
 ## What's next for HawkCC
 As with all machine learning based products, we would train a fresh model on our specific use case. Given the raw amount of CCTV footage out there, this is not a difficult task, but simply a time-consuming one. This would improve accuracy in 2 main respects - cleaner identification of weapons from a slightly top-down view, and better tracking of individuals within the frame. SMS alert integration is another feature that we could easily plug into the surveillance system as well, and further compound the reaction improvement time.
 
-## File Structure
-```
-|
-|___ vikrame1999
-     |___ dataset
-  
-```
 
----
+## Link to Devpost: 
 
-To activate virtual environment
-```
-conda activate weapon
+ https://devpost.com/software/hawkcc 
 
- ```
