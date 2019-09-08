@@ -99,17 +99,20 @@ def localize_objects(path):
 
 
 gun, people = localize_objects(imagePath)
-print(gun)
-print(people)
-id, distance, (ROIxMin, ROIyMin, ROIxMax, ROIyMax) = findDistances(gun, people)
-print(id, distance, ROIxMin, ROIyMin, ROIxMax, ROIyMax)
+if not gun or not people:
+    pass
+else:
+    print(gun)
+    print(people)
+    id, distance, (ROIxMin, ROIyMin, ROIxMax, ROIyMax) = findDistances(gun, people)
+    print(id, distance, ROIxMin, ROIyMin, ROIxMax, ROIyMax)
 
-im = Image.open(imagePath)
-width, height = im.size
-left = width * ROIxMin
-top = height - (height * ROIyMax)
-right = width * ROIxMax
-bottom = height - (height * ROIyMin)
-print(left, top, right, bottom)
-im1 = im.crop((left, top, right, bottom))
-im1.show()
+    im = Image.open(imagePath)
+    width, height = im.size
+    left = width * ROIxMin
+    top = height - (height * ROIyMax)
+    right = width * ROIxMax
+    bottom = height - (height * ROIyMin)
+    print(left, top, right, bottom)
+    im1 = im.crop((left, top, right, bottom))
+    im1.show()
