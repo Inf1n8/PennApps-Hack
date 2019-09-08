@@ -1,27 +1,36 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>HawkCC Live Dashboard</title>
+    <title >HawkCC Live Dashboard</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
       <style>
       /* Always set the map height explicitly to define the size of the div
       * element that contains the map. */
       #map {
-            height: 100%;
-            width: 49.5%;
+            height: 115vh;
+            width: 100%;
             float: left;
             margin: 30
       }
+      
       #details {
-            padding-left: 51%;
+            text-align: center;
             color: red;
       }
+
+      #wrapper {
+  display: flex;
+  justify-content: center;
+}
+
       #name, #haircolor, #height, #age, #build, #sunglasses, #mustache, #beard {
             display: inline-block;
       }
-      #title {
+      .title {
             text-align: center;
             color: red;
       }
@@ -34,7 +43,7 @@
             margin-left: auto;
             float: right;
             width: 49.5%;
-            margin: 30
+            /* margin: 30 */
       }
       </style>
       </head>
@@ -47,35 +56,64 @@
               });
             });
       </script>
-  <body style="background-color:#212F3D;">
+  <body style="background-color:#212F3D;overflow-x: hidden; padding: 2%">
 
     <header>
       <img src="logo.jpg" style="width:66px;height:60px;">
       <font size="7" color="#FFFFFF">  HawkCC | Dashboard</font>
     </header>
 
-    <h1 id="title">Threat Detected</h1>
-
-    <img id="roi" src = "scene.jpg" class = "right">
+    
     
     <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+    <div class="row">
+      <div class="col-sm-12 col-lg-6">
+        <h1 class="title">Map</h1>
+        <div  id="map"></div>
+      </div>
+      <div class="col-sm-12 col-lg-6">
+        <div id="details">
+          <h1 class="title">Threat Detected</h1>
+          <img src="scene.jpg" style="margin-top:1%" id="roi" width="53%" height="65%" alt="threat"/><br/>
+          <h3 style="text-align:left;margin-top: 2%; margin-left:23%">Suspect Details:</h3>
+          <div style="margin-top:2%; font-size: 19px">
+          
+            
+          <b>Name:</b> <div id="name"></div> <br>
+          <b>Haircolor:</b> <div id="haircolor"></div> <br>
+          <b>Height:</b> <div id="height"></div> <br>
+          <b>Age Range:</b> <div id="age"></div> <br>
+          <b>Build:</b> <div id="build"></div> <br>
+          <b>Sunglasses:</b> <div id="sunglasses"></div> <br>
+          <b>Mustache:</b> <div id="mustache"></div> <br>
+          <b>Beard:</b> <div id="beard"></div> <br>
+         
 
-    <div id="map"></div>
-
-    <div id="details">
-      <b>Name:</b> <div id="name"></div> <br>
-      <b>Haircolor:</b> <div id="haircolor"></div> <br>
-      <b>Height:</b> <div id="height"></div> <br>
-      <b>Age Range:</b> <div id="age"></div> <br>
-      <b>Build:</b> <div id="build"></div> <br>
-      <b>Sunglasses:</b> <div id="sunglasses"></div> <br>
-      <b>Mustache:</b> <div id="mustache"></div> <br>
-      <b>Beard:</b> <div id="beard"></div> <br>
+          </div>
+          <button style="margin-top:2%" onclick=sendAlert() class="btn wrapper btn-danger ">Alert Officials</button>
+        </div>
+      </div>
     </div>
+    
 
-    <button class = "right">Alert Officials</button>
-
+    <script>
+      function sendAlert(){
+        console.log('hi')
+        $.ajax("https://pennyzero.appspot.com/alert", {
+            type: 'POST',
+            data: {
+              test: 'test1',
+              test2: 'test2'
+            },
+            dataType:"application/json",
+            success: function(data){
+              alert("message has been sent!");
+              console.log(data)
+            }
+          });
+      }
+    </script>
 
     <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase.js"></script>
     <script type="text/javascript">
@@ -155,7 +193,7 @@
 
     // Firebase starts from here
 
-    // Your web app's Firebase configuration
+    // Your web app's Firebase configuration
     var firebaseConfig = {
       apiKey: "AIzaSyBe2EmNpzsL4YKfHbRk2fTwbFFb5sic4D4",
       authDomain: "cchawk-23c66.firebaseapp.com",
