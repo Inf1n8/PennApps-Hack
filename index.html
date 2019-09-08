@@ -1,34 +1,102 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Simple Map</title>
+    <title>HawkCC Live Dashboard</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
-    <style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <style>
       /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
+      * element that contains the map. */
       #map {
-        height: 100%;
+            height: 100%;
+            width: 49.5%;
+            float: left;
+            margin: 30
+      }
+      #details {
+            padding-left: 51%;
+            color: red;
+      }
+      #name, #haircolor, #height, #age, #build, #sunglasses, #mustache, #beard {
+            display: inline-block;
+      }
+      #title {
+            text-align: center;
+            color: red;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
+            height: 94%;
+            margin: 30
       }
-    </style>
-  </head>
-  <body>
+      .right {
+            margin-left: auto;
+            float: right;
+            width: 49.5%;
+            margin: 30
+      }
+      </style>
+      </head>
+      <script>
+            $(document).ready(function(){
+              $("button").click(function(){
+                $.get("demo_test.asp", function(data, status){
+                  alert("Data: " + data + "\nStatus: " + status);
+                });
+              });
+            });
+      </script>
+  <body style="background-color:#212F3D;">
+
+    <header>
+      <img src="logo.jpg" style="width:66px;height:60px;">
+      <font size="7" color="#FFFFFF">  HawkCC | Dashboard</font>
+    </header>
+
+    <h1 id="title">Threat Detected</h1>
+
+    <img id="roi" src = "scene.jpg" class = "right">
+    
+    <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+
     <div id="map"></div>
-    <script>
+
+    <div id="details">
+      <b>Name:</b> <div id="name"></div> <br>
+      <b>Haircolor:</b> <div id="haircolor"></div> <br>
+      <b>Height:</b> <div id="height"></div> <br>
+      <b>Age Range:</b> <div id="age"></div> <br>
+      <b>Build:</b> <div id="build"></div> <br>
+      <b>Sunglasses:</b> <div id="sunglasses"></div> <br>
+      <b>Mustache:</b> <div id="mustache"></div> <br>
+      <b>Beard:</b> <div id="beard"></div> <br>
+    </div>
+
+    <button class = "right">Alert Officials</button>
+
+
+    <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase.js"></script>
+    <script type="text/javascript">
+      var name = "";
+      var haircolor = "";
+      var height = "";
+      var age = "";
+      var build = "";
+      var roi = "";
+      var sunglasses = "";
+      var mustache = "";
+      var beard = "";
       function initMap() {
+
         var ltd = 39.953;
         var lng = -75.165;
         var city = new google.maps.LatLng(ltd, lng);
 
         var map = new google.maps.Map(document.getElementById('map'), {
           center: city,
-          zoom: 17
+          zoom: 15
         });
 
         var coordInfoWindow = new google.maps.InfoWindow();
@@ -36,11 +104,13 @@
         coordInfoWindow.setPosition(city);
         coordInfoWindow.open(map);
 
+
         map.addListener('zoom_changed', function() {
           coordInfoWindow.setContent(createInfoWindowContent(city, map.getZoom()));
           coordInfoWindow.open(map);
         });
       }
+
 
       var TILE_SIZE = 256;
 
@@ -48,10 +118,6 @@
         var scale = 1 << zoom;
 
         var worldCoordinate = project(latLng);
-
-        var suspect = "John Doe";
-        var hairColor = "Blond";
-        var height = "180cm";
 
         var pixelCoordinate = new google.maps.Point(
           Math.floor(worldCoordinate.x * scale),
@@ -63,9 +129,11 @@
 
         return [
           'LatLng: ' + latLng,
-          'Suspect: ' + suspect,
-          'Hair Color: ' + hairColor,
-          'Height: ' + height,
+          'Name: ' + name,
+          // 'Hair Color: ' + haircolor,
+          // 'Height: ' + height,
+          // 'Age: ' + age,
+          // 'Build: ' + build,
 
         ].join('<br>');
       }
@@ -83,8 +151,112 @@
           TILE_SIZE * (0.5 + latLng.lng() / 360),
           TILE_SIZE * (0.5 - Math.log((1 + siny) / (1 - siny)) / (4 * Math.PI)));
       }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"
+
+
+    // Firebase starts from here
+
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyBe2EmNpzsL4YKfHbRk2fTwbFFb5sic4D4",
+      authDomain: "cchawk-23c66.firebaseapp.com",
+      databaseURL: "https://cchawk-23c66.firebaseio.com",
+      projectId: "cchawk-23c66",
+      storageBucket: "",
+      messagingSenderId: "292333604659",
+      appId: "1:292333604659:web:e1dac370b2fcd9c4077846"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    // Configuration ends here
+
+    var db = firebase.database();
+    var ref = db.ref('Display');
+
+    console.log(ref);
+    ref.on('value', function(snapshot){
+    //    console.log(snapshot.val());
+        name = snapshot.val().name;
+        age = snapshot.val().age_range;
+        haircolor = snapshot.val().haircolor;
+        build = snapshot.val().build;
+        height = snapshot.val().height;
+        roi = snapshot.val().roi;
+        mustache = snapshot.val().mustache;
+        eyeglasses = snapshot.val().eyeglasses;
+        beard = snapshot.val().beard;
+
+
+
+        document.getElementById("name").textContent= name;
+        document.getElementById("age").textContent = age;
+        document.getElementById("haircolor").textContent = haircolor;
+        document.getElementById("build").textContent = build;
+        document.getElementById("height").textContent = height;
+        document.getElementById("roi").src = roi;
+        if (beard === true) {
+            console.log("sdjkfhdskj");
+            document.getElementById("beard").textContent = "Yes";
+        } else {
+            document.getElementById("beard").textContent = "No";
+        }
+            if (mustache === true) {
+            document.getElementById("mustache").textContent = "Yes";
+        } else {
+            document.getElementById("mustache").textContent = "No";
+        }
+            if (eyeglasses === true) {
+            document.getElementById("eyeglasses").textContent = "Yes";
+        } else {
+            document.getElementById("eyeglasses").textContent = "No";
+        }
+
+        
+        
+    }, function(error){
+        console.log("Error is" , error);
+        document.getElementById("name").textContent= "error";
+        document.getElementById("age").textContent = "error";
+        document.getElementById("haircolor").textContent = "error";
+        document.getElementById("build").textContent = "error";
+        document.getElementById("height").textContent = "error";
+        document.getElementById("roi").src = "";
+      document.getElementById("beard").src = "";
+        document.getElementById("mustache").src = "";
+        document.getElementById("eyeglasses").src = "";
+    });
+
+
+    // var list = document.getElementById("log");
+
+    // var refLog = db.ref('wallet_log');
+    // var dataLogList = [];
+    // dataLogList.push("<th>Date</th> <th> Time </th> <th> Status </th>");
+    // refLog.on('value', function(snapshot){
+
+    //     var dataLog = snapshot.val();
+    //     for (item in dataLog){
+    //         console.log("item is" , item,dataLog[item], '\n' )
+    //         for (element in dataLog[item]){
+    //             var classT ="table-success";
+    //             if((" Wallet is not connected").localeCompare(dataLog[item][element])==0){
+    //                 console.log("Done");
+    //                 classT = "table-danger";
+    //             }
+    //             dataLogList.push("<tr class="+classT+"><td>"+item+"</td><td>"+element+ "</td>"+"<td>" +dataLog[item][element]+"</td></tr>");
+           
+    //         }
+    //     }
+        
+    // var clusterize = new Clusterize({
+    //   rows: dataLogList,
+    //   scrollId: 'scrollArea',
+    //   contentId: 'contentArea'
+    // });
+    // });
+  </script>  
+
+
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyABlu1JdYXSKiOqHeScW8LMVzbMWxT7dcg&callback=initMap"
     async defer></script>
   </body>
 </html>
