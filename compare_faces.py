@@ -5,13 +5,25 @@ import os
 import json
 
 path = '/home/vikrame/Desktop/images/'
+
+
+from firebase import Firebase
+
+config = {
+  "apiKey": "AIzaSyBe2EmNpzsL4YKfHbRk2fTwbFFb5sic4D4",
+  "authDomain": "cchawk-23c66.firebaseapp.com",
+  "databaseURL": "https://cchawk-23c66.firebaseio.com/",
+  "storageBucket": ""
+}
+
+firebase = Firebase(config)
+
 ids = {
     "pranav": "1",
     "Vashisth" :"2" , 
     "Saravanan": "3",
     "Vikram" : "4"
 } 
-
 
 # if __name__ == "__main__":
 def find(targetFile):
@@ -58,16 +70,38 @@ def find(targetFile):
         imageSource.close()
     response = client.detect_faces(Image={'Bytes': targetImage},Attributes=['ALL'])
 
-    print('Detected faces for ' + targetFile)    
+    print('Detected faces for ' + targetFile) 
+    print(type(response)) 
+
     for faceDetail in response['FaceDetails']:
         print('The detected face is between ' + str(faceDetail['AgeRange']['Low']) 
               + ' and ' + str(faceDetail['AgeRange']['High']) + ' years old')
         print('Here are the other attributes:')
-        print(json.dumps(faceDetail, indent=4, sort_keys=True))
 
+        keyss = json.dumps(faceDetail, indent=4, sort_keys=True)
+        print(keyss)
+        
+        Beard = faceDetail["Beard"]["Value"]
+        Eye_glasses = faceDetail["Eyeglasses"]["Value"]
+        age_low = str(faceDetail['AgeRange']['Low']) 
+        age_high = str((faceDetail['AgeRange']['High']))
+        age = f'{age_low}-{age_high}'
+        print(Beard, Eye_glasses, age)
 
+        db = firebase.database()
+
+        db.child("Display")
+        db.child("Display").update({"age_range":age})
+        # loaded =json.load(keyss)
+        # print(loaded)
     imageTarget.close()  
+
+    # print(response["AgeRange"])
+    
+    # print(beard, glasses)
 
     print(ob)
     
+
+find('end.jpg')
 
